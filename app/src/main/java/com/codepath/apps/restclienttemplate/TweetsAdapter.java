@@ -64,6 +64,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivProfileImage;
         TextView tvBody;
         TextView tvScreenName;
+        TextView tvRelativeTimeAgo;
 
         //This itemview that is passed in is a representation of one row in the recycler view, a tweet.
         public ViewHolder(@NonNull @NotNull View itemView) {
@@ -71,6 +72,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
+            tvRelativeTimeAgo = itemView.findViewById(R.id.tvRelativeTimeAgo);
 
 
         }
@@ -79,9 +81,22 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             //Take out the different attributes of the tweet and use it to fill out the views on screen in the viewholder above
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName);
+            tvRelativeTimeAgo.setText(tweet.getRelativeTimeAgo(tweet.createdAt));
             //fill in profile image from the url
             Glide.with(context).load(tweet.user.publicImageUrl).into(ivProfileImage);
         }
+    }
+
+    //Refresh here
+
+    public void clear(){
+        tweets.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Tweet> list){
+        tweets.addAll(list);
+        notifyDataSetChanged();
     }
 
 }
