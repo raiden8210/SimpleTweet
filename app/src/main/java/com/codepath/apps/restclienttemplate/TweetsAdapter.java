@@ -61,7 +61,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     //Define a viewholder
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView ivProfileImage;
         TextView tvBody;
@@ -89,18 +89,18 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         }
 
 
-//        @Override
-//        public void onClick(View view) {
-//            int position = getAdapterPosition();
-//
-//            if(position != RecyclerView.NO_POSITION){
-//                Tweet tweet = tweets.get(position);
-//                Intent i = new Intent(context, TweetDetailActivity.class);
-//                i.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
-//                context.startActivity(i);
-//
-//            }
-//        }
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+
+            if(position != RecyclerView.NO_POSITION){
+                Tweet tweet = tweets.get(position);
+                Intent i = new Intent(context, TweetDetailActivity.class);
+                i.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                context.startActivity(i);
+
+            }
+        }
     }
     //Refresh here
 
