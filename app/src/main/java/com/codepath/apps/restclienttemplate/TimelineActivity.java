@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -43,12 +45,14 @@ public class TimelineActivity extends AppCompatActivity {
 
         //Will return to us a client, an instance of TwitterClient
         client = TwitterApp.getRestClient(this);
+        rvTweets = findViewById(R.id.rvTweets);
 
         //Find the recycler vew
-        rvTweets = findViewById(R.id.rvTweets);
+
         // Initialize the lkist of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
+
         // Recycler view setup: layout manager and the adapter
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
@@ -105,6 +109,9 @@ public class TimelineActivity extends AppCompatActivity {
         return true;
     }
 
+
+
+    //On the action bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 

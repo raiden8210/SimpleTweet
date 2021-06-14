@@ -34,9 +34,9 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        tools:text="This is my first tweet"
         android:autoLink="all"
-        android:linksClickable="true"/>
+        android:linksClickable="true"
+        tools:text="This is my first tweet" />
 
     <TextView
         android:id="@+id/tvRelativeTimeAgo"
