@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,12 +15,17 @@ import java.util.Locale;
 
 import static com.codepath.apps.restclienttemplate.TimelineActivity.TAG;
 
+@Parcel
 public class Tweet {
 
     public String body;
     public String createdAt;
     public User user;
     //public String relativeTimeAgo;
+
+    //Need empty constructor for Parceler library
+
+    public Tweet() {};
 
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
