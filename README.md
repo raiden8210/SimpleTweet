@@ -2,7 +2,7 @@
 
 SimpleTweet is an android app that allows a user to view their Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **X** hours spent in total
+Time spent: 25 hours spent in total
 
 ## User Stories
 
@@ -19,7 +19,7 @@ The following **required** functionality is completed:
   * [x] Newly created tweet should be manually inserted into the timeline and not rely on a full refresh
 * [x] User can **see a counter with total number of characters left for tweet** on compose tweet page
 * [x] User can **pull down to refresh tweets timeline**
-* [ ] User can **see embedded image media within a tweet** on list or detail view.
+* [x] User can **see embedded image media within a tweet** on list or detail view.
 
 The following **stretch** features are implemented:
 
