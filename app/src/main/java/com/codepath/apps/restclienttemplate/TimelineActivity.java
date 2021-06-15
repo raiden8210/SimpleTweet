@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -37,8 +38,10 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
+    Long lowestid;
 
     SwipeRefreshLayout swipeContainer;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         rvTweets = findViewById(R.id.rvTweets);
         tweets = new ArrayList<>();
         //Find the recycler vew
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Initialize the lkist of tweets and adapter
 
@@ -59,7 +63,19 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
 
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadNextDataFromApi(page);
+            }
+        };
+
+
+        rvTweets.addOnScrollListener(scrollListener);
+
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        rvTweets.addItemDecoration(new DividerItemDecoration(rvTweets.getContext(), DividerItemDecoration.VERTICAL));
+
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -69,8 +85,28 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
 
         populateHomeTimeline();
+    }
 
+    private void loadNextDataFromApi(int page) {
+        client.getNext(new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                JSONArray jsonArray = json.jsonArray;
+                                try {
+                                    //List<Tweet> tweets = Tweet.fromJsonArray(jsonArray);
+                                    adapter.addAll(Tweet.fromJsonArray(jsonArray));
+                                    lowestid = tweets.get(tweets.size()-1).id;
+                                    adapter.notifyDataSetChanged();
+                                } catch(JSONException e){
+                                    e.printStackTrace();
+                                }
+                            }
 
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                            }
+                        }, lowestid);
     }
 
     private void fetchTimeLineAsync(int i) {
@@ -95,6 +131,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 //                    Log.e(TAG, "Json exception");
 //                }
             }
+
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
@@ -123,6 +160,10 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
             Intent i = new Intent(this, ComposeActivity.class);
             startActivityForResult(i, REQUEST_CODE);
             return true;
+        }
+
+        if(item.getItemId() == R.id.homeClickTop){
+            rvTweets.smoothScrollToPosition(0);
         }
 
         return super.onOptionsItemSelected(item);
@@ -206,6 +247,11 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
     @Override
     public void onReply(int pos) {
+
+        Intent i = new Intent(this, ComposeActivity.class);
+        i.putExtra("user", tweets.get(pos).user.screenName);
+        i.putExtra("reply", true);
+        startActivityForResult(i, REQUEST_CODE);
 
     }
 

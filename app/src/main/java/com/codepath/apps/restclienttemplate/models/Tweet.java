@@ -57,6 +57,10 @@ public class Tweet {
         return user;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public static List<Tweet> fromJsonArray(JSONArray jsonArray) throws JSONException {
         List<Tweet> tweets = new ArrayList<>();
         for(int i = 0; i < jsonArray.length(); i++){

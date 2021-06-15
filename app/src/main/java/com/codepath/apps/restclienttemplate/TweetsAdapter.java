@@ -117,6 +117,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvRelativeTimeAgo.setText(tweet.getRelativeTimeAgo(tweet.createdAt));
             //fill in profile image from the url
             Glide.with(context).load(tweet.user.publicImageUrl).circleCrop().into(ivProfileImage);
+
             ibLike.setImageResource(R.drawable.ic_vector_heart_stroke);
             ibReply.setImageResource(R.drawable.ic_vector_messages_stroke);
             ibRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
@@ -193,6 +194,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ibReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    listener.onReply(getLayoutPosition());
 
                 }
             });
