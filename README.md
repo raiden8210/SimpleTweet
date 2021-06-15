@@ -23,9 +23,9 @@ The following **required** functionality is completed:
 
 The following **stretch** features are implemented:
 
-* [ ] User is using **"Twitter branded" colors and styles**
+* [x] User is using **"Twitter branded" colors and styles**
 * [ ] User sees an **indeterminate progress indicator** when any background or network task is happening
-* [ ] User can **select "reply" from home timeline to respond to a tweet**
+* [s] User can **select "reply" from home timeline to respond to a tweet**
   * [ ] User that wrote the original tweet is **automatically "@" replied in compose**
 * [x] User can tap a tweet to **open a detailed tweet view**
   * [x] User can **take favorite (and unfavorite) or retweet** actions on a tweet
