@@ -21,6 +21,9 @@ public class Tweet {
     public String body;
     public String createdAt;
     public User user;
+    public Long id;
+    public boolean like;
+    public boolean retweet;
     //public String relativeTimeAgo;
 
     //Need empty constructor for Parceler library
@@ -38,8 +41,20 @@ public class Tweet {
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        tweet.id = jsonObject.getLong("id");
+        tweet.like = jsonObject.getBoolean("favorited");
+        tweet.retweet = jsonObject.getBoolean("retweeted");
+
         //tweet.relativeTimeAgo = jsonObject.getString("")
         return tweet;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public static List<Tweet> fromJsonArray(JSONArray jsonArray) throws JSONException {

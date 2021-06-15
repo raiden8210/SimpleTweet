@@ -6,6 +6,26 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp">
 
+    <ImageButton
+        android:id="@+id/ibRetweet"
+        android:layout_width="20dp"
+        android:layout_height="21dp"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/ibReply"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageButton
+        android:id="@+id/ibLike"
+        android:layout_width="20dp"
+        android:layout_height="21dp"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/ibRetweet"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <ImageView
         android:id="@+id/ivProfileImage"
         android:layout_width="50dp"
@@ -46,4 +66,15 @@
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/tvScreenName"
         tools:text="5m" />
+
+    <ImageButton
+        android:id="@+id/ibReply"
+        android:layout_width="20dp"
+        android:layout_height="21dp"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        tools:srcCompat="@tools:sample/avatars" />
+
 </RelativeLayout>

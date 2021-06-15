@@ -12,9 +12,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -26,7 +28,7 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.OnTweetClickListener {
 
     public static final String TAG = "TimelineActivity";
     public static final int REQUEST_CODE = 20;
@@ -46,13 +48,13 @@ public class TimelineActivity extends AppCompatActivity {
         //Will return to us a client, an instance of TwitterClient
         client = TwitterApp.getRestClient(this);
         rvTweets = findViewById(R.id.rvTweets);
-
+        tweets = new ArrayList<>();
         //Find the recycler vew
 
         // Initialize the lkist of tweets and adapter
-        tweets = new ArrayList<>();
-        adapter = new TweetsAdapter(this, tweets);
 
+        adapter = new TweetsAdapter(this, this, tweets);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         // Recycler view setup: layout manager and the adapter
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
@@ -163,5 +165,80 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
+
+
+    @Override
+    public void onProfileImageClick(User user) {
+
+    }
+
+    @Override
+    public void onLike(final int pos, boolean isChecked) {
+        if(!isChecked){
+            client.like(tweets.get(pos).id, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    tweets.get(pos).like = true;
+                }
+
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                }
+            });
+        } else{
+            client.unlike(tweets.get(pos).id, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    tweets.get(pos).like = false;
+                }
+
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onReply(int pos) {
+
+    }
+
+    @Override
+    public void onRetweet(final int pos, boolean isChecked) {
+
+        if(!isChecked){
+            client.retweet(tweets.get(pos).id, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    tweets.get(pos).retweet = true;
+                }
+
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                }
+            });
+        } else{
+            client.unretweet(tweets.get(pos).id, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    tweets.get(pos).retweet = false;
+                }
+
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                }
+            });
+        }
+
+    }
+
+
 }
