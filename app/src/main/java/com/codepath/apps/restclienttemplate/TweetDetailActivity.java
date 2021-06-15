@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -36,6 +37,7 @@ public class TweetDetailActivity extends AppCompatActivity implements TweetsAdap
     ImageButton ibRetweet;
     ImageButton ibReply;
     ImageButton ibLike;
+    ImageView ivPostedImage;
 
 
     List<Tweet> tweets;
@@ -53,6 +55,7 @@ public class TweetDetailActivity extends AppCompatActivity implements TweetsAdap
         ibRetweet = findViewById(R.id.ibRetweet);
         ibReply = findViewById(R.id.ibReply);
         ibLike = findViewById(R.id.ibLike);
+        ivPostedImage = findViewById(R.id.ivPostedImage);
 
         client = TwitterApp.getRestClient(this);
 
@@ -66,6 +69,13 @@ public class TweetDetailActivity extends AppCompatActivity implements TweetsAdap
         tvBody.setText(tweet.getBody());
         tvScreenName.setText(tweet.getUser().screenName);
         Glide.with(this).load(tweet.user.publicImageUrl).into(ivProfileImage);
+
+        if (tweet.mediaUrl != "") {
+            ivPostedImage.setVisibility(View.VISIBLE);
+            Glide.with(this).load(tweet.mediaUrl).fitCenter().override(640, 360).transform(new RoundedCorners(25)).into(ivPostedImage);
+        } else {
+            ivPostedImage.setVisibility(View.GONE);
+        }
 
         ibRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
         ibReply.setImageResource(R.drawable.ic_vector_messages_stroke);

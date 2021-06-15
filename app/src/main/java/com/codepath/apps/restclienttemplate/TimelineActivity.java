@@ -29,6 +29,8 @@ import java.util.List;
 
 import okhttp3.Headers;
 
+import static com.facebook.stetho.inspector.network.PrettyPrinterDisplayType.JSON;
+
 public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.OnTweetClickListener {
 
     public static final String TAG = "TimelineActivity";
@@ -38,7 +40,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
-    Long lowestid;
+    private Long lowestid;
 
     SwipeRefreshLayout swipeContainer;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -66,7 +68,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                loadNextDataFromApi(page);
+                loadNextDataFromApi();
             }
         };
 
@@ -87,14 +89,14 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         populateHomeTimeline();
     }
 
-    private void loadNextDataFromApi(int page) {
-        client.getNext(new JsonHttpResponseHandler() {
+    private void loadNextDataFromApi() {
+        client.getNext(lowestid, new JsonHttpResponseHandler(){
                             @Override
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 JSONArray jsonArray = json.jsonArray;
                                 try {
                                     //List<Tweet> tweets = Tweet.fromJsonArray(jsonArray);
-                                    adapter.addAll(Tweet.fromJsonArray(jsonArray));
+                                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
                                     lowestid = tweets.get(tweets.size()-1).id;
                                     adapter.notifyDataSetChanged();
                                 } catch(JSONException e){
@@ -106,7 +108,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
                             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
 
                             }
-                        }, lowestid);
+                        });
     }
 
     private void fetchTimeLineAsync(int i) {

@@ -24,6 +24,7 @@ public class Tweet {
     public Long id;
     public boolean like;
     public boolean retweet;
+    public String mediaUrl;
     //public String relativeTimeAgo;
 
     //Need empty constructor for Parceler library
@@ -44,6 +45,12 @@ public class Tweet {
         tweet.id = jsonObject.getLong("id");
         tweet.like = jsonObject.getBoolean("favorited");
         tweet.retweet = jsonObject.getBoolean("retweeted");
+        JSONObject entities = jsonObject.getJSONObject("entities");
+        if (entities.has("media")){
+            tweet.mediaUrl = entities.getJSONArray("media").getJSONObject(0).getString("media_url_https");
+        } else {
+            tweet.mediaUrl = "";
+        }
 
         //tweet.relativeTimeAgo = jsonObject.getString("")
         return tweet;
