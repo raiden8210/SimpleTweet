@@ -8,13 +8,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import okhttp3.Headers;
@@ -27,7 +30,9 @@ public class ComposeActivity extends AppCompatActivity {
 
     EditText etCompose;
     Button btnTweet;
-
+    User user;
+    TextView tvScreenName;
+    Boolean reply;
     TwitterClient client;
 
     @Override
@@ -38,11 +43,14 @@ public class ComposeActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-
+        tvScreenName = findViewById(R.id.tvScreenName);
         client = TwitterApp.getRestClient(this);
 
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
+
+        reply = getIntent().getExtras().getBoolean("reply");
+        getUser();
 
         // Set a click listener on button
         btnTweet.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +97,7 @@ public class ComposeActivity extends AppCompatActivity {
 
 
 
+
                 // Make API call once button is clicked to Twitter to publish tweet
 
             }
@@ -96,4 +105,37 @@ public class ComposeActivity extends AppCompatActivity {
 
 
     }
+
+    private void getUser() {
+        String screenName = "";
+        if(reply){
+            screenName = getIntent().getExtras().getString("user");
+        }
+
+        final String finalScreenName = screenName;
+        client.getUser(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONObject JSONObject = json.jsonObject;
+                try {
+                    user = User.fromJson(JSONObject);
+                    //tvScreenName.setText(String.format("@%s", user.screenName));
+                    if(reply){
+                        etCompose.setText(String.format("@%s", finalScreenName));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+            }
+        });
+    }
+
 }
