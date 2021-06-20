@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.codepath.apps.restclienttemplate.databinding.ActivityTweetDetailBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
@@ -35,7 +37,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     List<Tweet> tweets;
 
     public interface OnTweetClickListener {
-        void onProfileImageClick(User user);
         void onLike(int pos, boolean isChecked);
         void onReply(int pos);
         void onRetweet(int pos, boolean isChecked);
@@ -72,8 +73,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         //Bind the tweet with the viewholder that we jsut passed in
         //We make the bind method.
         holder.bind(tweet);
-
-
     }
 
     @Override
@@ -95,6 +94,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageButton ibRetweet;
         ImageButton ibReply;
         ImageView ivPostedImage;
+        FloatingActionButton fab;
 
         //This itemview that is passed in is a representation of one row in the recycler view, a tweet.
         public ViewHolder(@NonNull @NotNull View itemView) {
@@ -107,6 +107,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ibReply = itemView.findViewById(R.id.ibReply);
             ibRetweet = itemView.findViewById(R.id.ibRetweet);
             ivPostedImage = itemView.findViewById(R.id.ivPostedImage);
+            //fab = itemView.findViewById(R.id.fab);
             //client = TwitterApp.getRestClient(context);
 
             //itemView.setOnClickListener(this);
@@ -145,6 +146,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     }
 
 
+                }
+            });
+
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION){
+                        Tweet tweet = tweets.get(position);
+                        Intent i = new Intent(context, FollowersActivity.class);
+                        i.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                        context.startActivity(i);
+                    }
                 }
             });
 
@@ -187,6 +201,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 }
             });
 
+
+            //Not a finished method here, causes crashing, gotta figure out
+//            fab.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent i = new Intent(context, ComposeActivity.class);
+//                    //i.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+//                    context.startActivity(i);
+//                }
+//            });
+
+
+             
             ibRetweet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

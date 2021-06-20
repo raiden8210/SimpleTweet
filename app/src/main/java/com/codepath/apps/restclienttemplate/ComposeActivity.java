@@ -28,12 +28,18 @@ public class ComposeActivity extends AppCompatActivity {
     public static final String TAG = "ComposeActivity";
     public static final int MAX_TWEET_LENGTH = 280;
 
+    public static final String EXTRA_REPLY = "isReplying";
+    public static final String EXTRA_REPLY_TO_ID = "tweetIdToReplyTo";
+    public static final String EXTRA_REPLY_TO_USERNAME = "tweetUsernameToReplyTo";
+
     EditText etCompose;
     Button btnTweet;
     User user;
     TextView tvScreenName;
-    Boolean reply;
+    boolean isReplying;
     TwitterClient client;
+    long tweetIdtoReplyTo = -1;
+    String tweetUsernametoReplyTo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +55,13 @@ public class ComposeActivity extends AppCompatActivity {
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
 
-        reply = getIntent().getExtras().getBoolean("reply");
-        getUser();
+        isReplying = getIntent().getBooleanExtra(ComposeActivity.EXTRA_REPLY, false);
+
+        if(isReplying) {
+            tweetIdtoReplyTo = getIntent().getLongExtra(ComposeActivity.EXTRA_REPLY_TO_ID, -1);
+            tweetUsernametoReplyTo = getIntent().getStringExtra(ComposeActivity.EXTRA_REPLY_TO_USERNAME);
+            etCompose.setText("@" + tweetUsernametoReplyTo + " ");
+        }
 
         // Set a click listener on button
         btnTweet.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +80,7 @@ public class ComposeActivity extends AppCompatActivity {
                     return;
                 }
 
-                client.publishTweet(tweetContent, new JsonHttpResponseHandler() {
+                client.publishTweet(tweetContent, tweetIdtoReplyTo, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                          Log.i(TAG, "onSuccess to publish tweet");
@@ -104,38 +115,6 @@ public class ComposeActivity extends AppCompatActivity {
         });
 
 
-    }
-
-    private void getUser() {
-        String screenName = "";
-        if(reply){
-            screenName = getIntent().getExtras().getString("user");
-        }
-
-        final String finalScreenName = screenName;
-        client.getUser(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                JSONObject JSONObject = json.jsonObject;
-                try {
-                    user = User.fromJson(JSONObject);
-                    //tvScreenName.setText(String.format("@%s", user.screenName));
-                    if(reply){
-                        etCompose.setText(String.format("@%s", finalScreenName));
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-
-            }
-        });
     }
 
 }

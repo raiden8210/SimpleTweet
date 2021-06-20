@@ -118,11 +118,6 @@ public class TweetDetailActivity extends AppCompatActivity implements TweetsAdap
     }
 
     @Override
-    public void onProfileImageClick(User user) {
-
-    }
-
-    @Override
     public void onLike(final int pos, boolean isChecked) {
         if(!isChecked){
             client.like(tweets.get(pos).id, new JsonHttpResponseHandler() {

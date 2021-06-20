@@ -50,16 +50,19 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
+		params.put("count", 20);
 		params.put("since_id", 1);
 		client.get(apiUrl, params, handler);
 	}
 
-	public void publishTweet(String tweetContent, JsonHttpResponseHandler handler) {
+	public void publishTweet(String tweetContent, long replyToTweetId, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/update.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
 		params.put("status", tweetContent);
+		if(replyToTweetId > 0) {
+			params.put("in_reply_to_status_id", replyToTweetId);
+		}
 		client.post(apiUrl, params, "", handler);
 	}
 
@@ -96,11 +99,18 @@ public class TwitterClient extends OAuthBaseClient {
 		client.get(apiUrl, params, handler);
 	}
 
+	public void getFollowers(String userId, JsonHttpResponseHandler handler){
+		String apiUrl = getApiUrl("followers/list.json");
+		RequestParams params = new RequestParams();
+		params.put("user_id", userId);
+		client.get(apiUrl, params, handler);
+	}
 
-	public void getNext(long maxId, JsonHttpResponseHandler handler) {
+
+	public void getNext(JsonHttpResponseHandler handler, long maxId) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
+		params.put("count", 20);
 		params.put("max_id", maxId);
 		client.get(apiUrl, params, handler);
 	}
